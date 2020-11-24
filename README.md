@@ -2,7 +2,7 @@
 Tiny lib for email (with attachments) sending (smtp)
 
 # import
-```github.com/ElrondfromRussia/emailer```
+```import "github.com/ElrondfromRussia/emailer"```
 
 # example
 ```
