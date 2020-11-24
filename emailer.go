@@ -77,6 +77,15 @@ type AttachData struct {
 	fileData []byte // attached file bytes
 }
 
+// Creating new *AttachData object.
+func NewAttach(fileName string, fileData []byte) *AttachData {
+	attach := AttachData{
+		fileName: fileName,
+		fileData: fileData,
+	}
+	return &attach
+}
+
 // Attaching file to mail. Returns attachments map: "filename": filedata.
 func attachFile(files []AttachData) (map[string][]byte, error) {
 	var attachments = make(map[string][]byte)
