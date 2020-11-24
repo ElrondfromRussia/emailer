@@ -12,15 +12,11 @@ import (
 	"time"
 )
 
+/////////////////////////////////////////////
+
 // Struct for auth.
 type loginAuth struct {
 	username, password string
-}
-
-// Struct for attachments.
-type AttachData struct {
-	fileName string
-	fileData []byte
 }
 
 // Auth with login and password.
@@ -75,7 +71,24 @@ func (s *Sender) Send() error {
 
 /////////////////////////////////////////////
 
-// Creating new *Sender obj.
+// Struct for attachments.
+type AttachData struct {
+	fileName string // attached file name
+	fileData []byte // attached file bytes
+}
+
+// Attaching file to mail. Returns attachments map: "filename": filedata.
+func attachFile(files []AttachData) (map[string][]byte, error) {
+	var attachments = make(map[string][]byte)
+	for _, f := range files {
+		attachments[f.fileName] = f.fileData
+	}
+	return attachments, nil
+}
+
+/////////////////////////////////////////////
+
+// Creating new *Sender object.
 func NewSender(login, password, email, server string) *Sender {
 	auth := Sender{
 		Login:      login,
@@ -85,14 +98,17 @@ func NewSender(login, password, email, server string) *Sender {
 	return &auth
 }
 
-// Creating new email message.
+// Creating new email message with attachments.
 func (s *Sender) NewMessage(subject string, to []string, body string, files []AttachData) error {
+	// getting attachments list
 	attachments, err := attachFile(files)
 	if err != nil {
 		return err
 	}
 
+	// flag = has or not any attachments
 	withAttachments := len(attachments) > 0
+
 	var headers = make(map[string]string)
 	headers["From"] = s.Email
 	headers["To"] = strings.Join(to, ";")
@@ -115,6 +131,8 @@ func (s *Sender) NewMessage(subject string, to []string, body string, files []At
 	buf.WriteString("Content-Type: text/plain; charset=utf-8\r\n")
 	buf.WriteString("MIME-Version: 1.0\r\n")
 	buf.WriteString("\r\n" + body)
+
+	// putting attachments
 	if withAttachments {
 		for k, v := range attachments {
 			buf.WriteString(fmt.Sprintf("\r\n--%s\r\n", boundary))
@@ -134,13 +152,4 @@ func (s *Sender) NewMessage(subject string, to []string, body string, files []At
 	s.message = buf.Bytes()
 
 	return nil
-}
-
-// Attaching file to mail. Returns attachments map: "filename": filedata.
-func attachFile(files []AttachData) (map[string][]byte, error) {
-	var attachments = make(map[string][]byte)
-	for _, f := range files {
-		attachments[f.fileName] = f.fileData
-	}
-	return attachments, nil
 }
