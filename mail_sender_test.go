@@ -17,8 +17,8 @@ func TestSimpleMail(t *testing.T) {
 	)
 
 	err := s.NewMessage("topic", []string{"user@mail.com"}, "test", []AttachData{{
-		fileName: "test.txt",
-		fileData: []byte("test"),
+		FileName: "test.txt",
+		FileData: []byte("test"),
 	}})
 	if err != nil {
 		t.Fatal(err)

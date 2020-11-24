@@ -73,24 +73,15 @@ func (s *Sender) Send() error {
 
 // Struct for attachments.
 type AttachData struct {
-	fileName string // attached file name
-	fileData []byte // attached file bytes
-}
-
-// Creating new *AttachData object.
-func NewAttachData(fileName string, fileData []byte) *AttachData {
-	attach := AttachData{
-		fileName: fileName,
-		fileData: fileData,
-	}
-	return &attach
+	FileName string // attached file name
+	FileData []byte // attached file bytes
 }
 
 // Attaching file to mail. Returns attachments map: "filename": filedata.
 func attachFile(files []AttachData) (map[string][]byte, error) {
 	var attachments = make(map[string][]byte)
 	for _, f := range files {
-		attachments[f.fileName] = f.fileData
+		attachments[f.FileName] = f.FileData
 	}
 	return attachments, nil
 }
