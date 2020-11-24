@@ -78,7 +78,7 @@ type AttachData struct {
 }
 
 // Creating new *AttachData object.
-func NewAttach(fileName string, fileData []byte) *AttachData {
+func NewAttachData(fileName string, fileData []byte) *AttachData {
 	attach := AttachData{
 		fileName: fileName,
 		fileData: fileData,
